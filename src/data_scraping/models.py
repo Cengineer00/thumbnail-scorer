@@ -121,7 +121,7 @@ class ChannelVideos:
             'video_id', 'published_at', 'channel_id', 'title',
             'thumbnail_maxres_url', 'category_id', 'default_language',
             'duration', 'view_count', 'like_count',
-            'favorite_count', 'comment_count'
+            'favorite_count', 'comment_count','average_view_count', 'total_videos', 'total_views'
         ]
 
         with open(csv_path, 'a', newline='', encoding='utf-8') as csvfile:
@@ -130,6 +130,9 @@ class ChannelVideos:
 
             for video in self.videos:
                 row = asdict(video)
+                row["average_view_count"] = self.average_view_count
+                row["total_videos"] = self.total_videos
+                row["total_views"] = self.total_views
                 # Convert datetime to ISO format string
                 if video.published_at:
                     row['published_at'] = video.published_at.isoformat()
