@@ -1,5 +1,5 @@
 # 🖼️ YouTube Thumbnail Scorer
-This project trains a machine learning model to predict the effectiveness of YouTube thumbnails using the ratio of _views to average views of a channel_. It leverages OpenAI’s CLIP model (ResNet50 backbone) for image embedding and trains a LightGBM regressor to estimate performance.
+This project trains a machine learning model to predict the effectiveness of YouTube thumbnails using the ratio of **_views to average views of a channel_**. It leverages OpenAI’s CLIP model (ResNet50 backbone) for image embedding and trains a LightGBM regressor to estimate performance.
 
 It is developed from the scratch at Noktalı Virgül live broadcast: [YouTube Broadcast Link](https://www.youtube.com/watch?v=Ahif9Zt3nBc)
 
@@ -41,8 +41,6 @@ Open and run `src/data_scraping/playground.ipynb` to retrieve metadata of videos
 This step will generate a CSV file to:  
   `data/raw/total.csv`
 
----
-
 ### 2. Download Thumbnails
 Run the image fetching script to download all thumbnails mentioned in the CSV.
 
@@ -53,8 +51,6 @@ python fetch_images.py
 
 - Thumbnails will be saved to:  
   `src/data_scraping/thumbnails`
-
----
 
 ### 3. Train the Model
 Run the complete `main.ipynb` notebook:
@@ -70,8 +66,6 @@ What it does:
   `model.lgb`
 
 You can test the model predictions at the end of the notebook.
-
----
 
 ### 4. Run the Streamlit App
 Launch the app to score your own thumbnails interactively.
