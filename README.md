@@ -3,7 +3,7 @@ This project trains a machine learning model to predict the effectiveness of You
 
 It is developed from the scratch at Noktalı Virgül live broadcast: [YouTube Broadcast Link](https://www.youtube.com/watch?v=Ahif9Zt3nBc)
 
-![Noktalı Virgül Thumbnails-3](https://github.com/user-attachments/assets/7e43a1eb-4c71-49cb-acee-e8ceb3173096)
+<img width="1876" height="955" alt="Screenshot 2025-07-21 at 19 47 53" src="https://github.com/user-attachments/assets/77520616-ea6c-46e7-b427-a74f497d7936" />
 
 ---
 
