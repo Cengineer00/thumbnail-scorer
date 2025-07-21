@@ -9,6 +9,7 @@ import pandas as pd
 
 st.set_page_config(page_title="YouTube Thumbnail Scorer", layout="wide")
 st.title("📺 YouTube Thumbnail Scorer")
+st.markdown("## [View on GitHub](https://github.com/Cengineer00/thumbnail-scorer)", unsafe_allow_html=True)
 
 # Load models once, cache for performance
 @st.cache_resource
@@ -22,7 +23,6 @@ def load_models():
 model, preprocess, regressor, device = load_models()
 
 def get_embedding_batch(images):
-    # images: list of PIL Images
     tensors = [preprocess(img).to(device) for img in images]
     batch = torch.stack(tensors)
     with torch.no_grad():
@@ -33,18 +33,20 @@ def predict_scores(embeddings):
     return regressor.predict(embeddings)
 
 uploaded_files = st.file_uploader(
-    "Upload thumbnail images (png, jpg, jpeg)", 
-    type=["png", "jpg", "jpeg"], 
+    "📂 Drag & drop or browse thumbnail images",
+    type=["png", "jpg", "jpeg"],
     accept_multiple_files=True
 )
 
 if uploaded_files:
     images = []
+    filenames = []
     for file in uploaded_files:
         try:
             img = Image.open(file).convert("RGB")
             images.append(img)
-        except Exception as e:
+            filenames.append(file.name)
+        except Exception:
             st.warning(f"Skipping {file.name}, could not open image.")
 
     if images:
@@ -54,10 +56,9 @@ if uploaded_files:
         batch_size = 32
         all_embeddings = []
         total = len(images)
-        
-        # Process in batches with progress bar
+
         for i in range(0, total, batch_size):
-            batch_imgs = images[i:i+batch_size]
+            batch_imgs = images[i:i + batch_size]
             embeddings = get_embedding_batch(batch_imgs)
             all_embeddings.append(embeddings)
             progress_bar.progress(min((i + batch_size) / total, 1.0))
@@ -68,45 +69,58 @@ if uploaded_files:
 
         all_embeddings = np.vstack(all_embeddings)
         scores = predict_scores(all_embeddings)
-        est_ratios = np.exp(scores)
 
-        # Prepare data for table & CSV
+        # Build results list combining all necessary data
         results = []
-        for i, img in enumerate(images):
+        for i in range(len(images)):
             results.append({
-                "filename": uploaded_files[i].name,
-                "log_score": round(float(scores[i]), 4),
-                "views_per_subscriber_est": round(float(est_ratios[i]), 2)
+                "filename": filenames[i],
+                "score": round(float(scores[i]), 2),
+                "image": images[i]
             })
 
-        df = pd.DataFrame(results)
+        # Sort results by score
+        results_sorted = sorted(results, key=lambda x: x["score"], reverse=True)
 
-        # Show table
-        st.subheader("Results")
-        st.dataframe(df)
+        # Prepare DataFrame
+        df_sorted = pd.DataFrame([
+            {"filename": r["filename"], "score": r["score"]}
+            for r in results_sorted
+        ])
 
-        # CSV download
-        csv = df.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="Download results as CSV",
-            data=csv,
-            file_name="thumbnail_scores.csv",
-            mime='text/csv'
-        )
-
-        # Show thumbnails in grid with scores
-        st.subheader("Thumbnails Preview")
+        # Show thumbnails grid
+        st.subheader("🖼️ Thumbnails Preview (Sorted by Score)")
         cols_per_row = 4
-        rows = (len(images) + cols_per_row - 1) // cols_per_row
+        rows = (len(results_sorted) + cols_per_row - 1) // cols_per_row
+
         for r in range(rows):
             cols = st.columns(cols_per_row)
             for c in range(cols_per_row):
                 idx = r * cols_per_row + c
-                if idx >= len(images):
+                if idx >= len(results_sorted):
                     break
                 with cols[c]:
-                    st.image(images[idx], use_container_width='always')
-                    st.caption(f"{uploaded_files[idx].name}\nScore: {results[idx]['log_score']}\nEst. Views/Subs: {results[idx]['views_per_subscriber_est']}")
+                    st.image(results_sorted[idx]["image"], use_container_width=True)
+                    st.caption(f"{results_sorted[idx]['filename']}\nScore: {results_sorted[idx]['score']}")
+
+        # CSV download
+        csv = df_sorted.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="⬇️ Download results as CSV",
+            data=csv,
+            file_name="thumbnail_scores.csv",
+            mime="text/csv"
+        )
+
+        # Show metrics
+        st.subheader("🔍 Insights")
+        col1, col2 = st.columns(2)
+        col1.metric("📈 Highest Score", f"{df_sorted['score'].max():.2f}")
+        col2.metric("📊 Average Score", f"{df_sorted['score'].mean():.2f}")
+
+        # Show results table
+        st.subheader("📋 Score Table")
+        st.dataframe(df_sorted)
 
 else:
     st.info("Upload one or more thumbnail images to get started.")
