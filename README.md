@@ -95,7 +95,7 @@ If you'd like to contribute, feel free to fork the repository and submit a pull 
 
 ## 🙏 Acknowledgments
 
-[OpenAI CLIP](https://github.com/mlfoundations/open_clip)
-[LightGBM](https://github.com/microsoft/LightGBM)
-[YouTube Data API](https://developers.google.com/youtube/v3)
-[Streamlit](https://github.com/streamlit/streamlit)
+- [OpenAI CLIP](https://github.com/mlfoundations/open_clip)
+- [LightGBM](https://github.com/microsoft/LightGBM)
+- [YouTube Data API](https://developers.google.com/youtube/v3)
+- [Streamlit](https://github.com/streamlit/streamlit)
