@@ -1,8 +1,9 @@
-google-api-python-client
-isodate
-open_clip_torch
+streamlit
 lightgbm
+open_clip_torch
+torch
 pillow
 numpy
-streamlit
 joblib
+google-api-python-client
+isodate
