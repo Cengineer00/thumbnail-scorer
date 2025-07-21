@@ -1,2 +1,6 @@
 google-api-python-client
 isodate
+open_clip_torch
+lightgbm
+pillow
+numpy
