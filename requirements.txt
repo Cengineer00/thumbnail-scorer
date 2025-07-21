@@ -5,3 +5,4 @@ lightgbm
 pillow
 numpy
 streamlit
+joblib
