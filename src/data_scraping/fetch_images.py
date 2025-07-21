@@ -9,11 +9,22 @@ output_dir = 'thumbnails'
 
 # Create output directory if it doesn't exist
 os.makedirs(output_dir, exist_ok=True)
+file_list = os.listdir(output_dir)
+
+def is_in_list(video_id, file_list):
+    """Check if video_id is in the list of files."""
+    for filename in file_list:
+        if video_id in filename:
+            return True
+    return False
 
 with open(data_file, newline='', encoding='utf-8') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         video_id = row.get('video_id')
+        if is_in_list(video_id, file_list):
+            print(f"Thumbnail for {video_id} already exists, skipping.")
+            continue
         url = row.get('thumbnail_maxres_url')
         if not video_id or not url:
             continue
