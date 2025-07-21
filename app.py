@@ -4,8 +4,13 @@ from PIL import Image
 import numpy as np
 import joblib
 import open_clip
-import io
+import os
 import pandas as pd
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 
 st.set_page_config(page_title="YouTube Thumbnail Scorer", layout="wide")
 st.title("📺 YouTube Thumbnail Scorer")
@@ -18,6 +23,8 @@ def load_models():
     model, _, preprocess = open_clip.create_model_and_transforms('RN50', pretrained='openai')
     model.to(device).eval()
     regressor = joblib.load("model.lgb")
+    logger.info(f"regressor type: {type(regressor)}")
+    logger.info(f"model path exists: {os.path.exists('model.lgb')}")
     return model, preprocess, regressor, device
 
 model, preprocess, regressor, device = load_models()
