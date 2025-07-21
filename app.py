@@ -75,6 +75,10 @@ if uploaded_files:
         progress_text.empty()
 
         all_embeddings = np.vstack(all_embeddings)
+        logger.info(f"Total embeddings shape: {all_embeddings.shape}")
+        if all_embeddings.shape[0] == 0:
+            st.error("No valid images processed. Please check your uploads.")
+            st.stop()
         scores = predict_scores(all_embeddings)
 
         # Build results list combining all necessary data
