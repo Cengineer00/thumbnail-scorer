@@ -4,3 +4,4 @@ open_clip_torch
 lightgbm
 pillow
 numpy
+streamlit
